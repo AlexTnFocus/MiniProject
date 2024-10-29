@@ -1,5 +1,4 @@
 //Additional to do:
-//Add navigation page to fix naviagting between pages
 //Add reporting, for assertions and take screenshots of items used in assertions
 
 using OpenQA.Selenium.Chrome;
@@ -20,6 +19,7 @@ using static MiniProject.Utilities.HelperLib;
 using MiniProject.POMs;
 using System.Data.SqlTypes;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
+using OpenQA.Selenium.Support.Extensions;
 
 namespace MiniProject.Test_Cases
 {
@@ -42,36 +42,47 @@ namespace MiniProject.Test_Cases
             //Email = magmortar@pmail.com
             //Password = octoberComic0n!?
             MyAccountPage.FullLogin("magmortar@pmail.com", "octoberComic0n!?");
+            Console.WriteLine("Completed login process");
 
             //Enter the shop via the Shop button
-            //MyAccountPage.ClickShopLink();
             NavigationPage.GoShop();
+            Console.WriteLine("Navigated to Shop page");
 
             //Add a belt to the cart, by clicking add to cart below the item on the shop page
             ShopPage.AddBeltToCart();
+            Console.WriteLine("Added belt to cart");
 
             //View the cart
             Thread.Sleep(1000);//Aware of issue where if the cart is empty and an item is added, it may take a second to load
-            ShopPage.ClickCartLink();
+            NavigationPage.GoCart();
+            Console.WriteLine("Naviagted to cart page");
 
             //Apply a coupon "edgewords"
             CartPage.KeyIntoCoupon("edgewords");
             CartPage.ClickCoupon();
+            Console.WriteLine("Applied coupon");
 
             //Check that the coupon is valid for 15% off
             WaitForElementPresent(driver, By.CssSelector("tr[class='cart-subtotal'] bdi:nth-child(1)"));
             Assert.That((Decimal.Divide((Decimal.Parse(CartPage.GetSubtotal().Remove(0, 1)) - Decimal.Parse(CartPage.GetDiscount().Remove(0, 1))), Decimal.Parse(CartPage.GetSubtotal().Remove(0, 1)))), Is.EqualTo(0.85), "Discount is not valid for 15% off");
+            TakeScreenshot(driver, "TC1A1");
+            Console.WriteLine("Assertion succeeded, coupon is valid for 15% off");
+            Console.WriteLine("Cart total is " + CartPage.GetSubtotal() + " and the discount amount is " + CartPage.GetDiscount());
 
             //Check that the total after shipping is correct
             Assert.That(Decimal.Parse(CartPage.GetSubtotal().Remove(0, 1)) -
                 Decimal.Parse(CartPage.GetDiscount().Remove(0, 1))
                 + Decimal.Parse(CartPage.GetShipping().Remove(0, 1)),
                 Is.EqualTo(Decimal.Parse(CartPage.GetTotal().Remove(0, 1))),
-                "Error");
+                "Error, total after shipping is incorrect");
+            TakeScreenshot(driver, "TC1A2");
+            Console.WriteLine("The total after shipping is correct");
 
             //Log out
-            CartPage.ClickMyAccountLink();
+            //CartPage.ClickMyAccountLink();
+            NavigationPage.GoMyAccount();
             MyAccountPage.ClickLogout();
+            Console.WriteLine("Logout process completed");
 
             /*driver.FindElement(By.LinkText("Dismiss")).Click();//Dismisses the "demo store" warning which gets in the way
             //Login details for manually setup account
@@ -142,6 +153,7 @@ namespace MiniProject.Test_Cases
             CartPage CartPage = new CartPage(driver);
             CheckoutPage CheckoutPage = new CheckoutPage(driver);
             OrderPage OrderPage = new OrderPage(driver);
+            NavigationPage NavigationPage = new NavigationPage(driver);
 
             //Dismiss the 'Demo Store' bar that appears at the bottom
             MyAccountPage.DismissDemoWarning();
@@ -151,41 +163,53 @@ namespace MiniProject.Test_Cases
             //Password = octoberComic0n!?
             //Login to the account
             MyAccountPage.FullLogin("magmortar@pmail.com", "octoberComic0n!?");
+            Console.WriteLine("Completed login process");
 
             //Enter the shop
-            MyAccountPage.ClickShopLink();
+            NavigationPage.GoShop();
+            Console.WriteLine("Navigated to shop");
 
             //Add a clothing item to the cart
             ShopPage.AddBeltToCart();
+            Console.WriteLine("Added 1 belt item to cart");
 
             //View the cart
-            ShopPage.ClickCartLink();
+            NavigationPage.GoCart();
+            Console.WriteLine("Navigated to cart");
 
             //Proceed to the checkout
-            CartPage.ClickCheckoutLink();
+            NavigationPage.GoCheckout();
+            Console.WriteLine("Navigated to checkout");
 
             //Complete billing details, use a valid postcode
             CheckoutPage.ClearFullBilling();
             CheckoutPage.EnterFullBilling();
+            Console.WriteLine("Entered billing details");
 
             //Select 'check payments' as a payment method
             CheckoutPage.ClickCheckPayment();
+            Console.WriteLine("Selected payment method");
 
             //Place the order
             CheckoutPage.ClickPlaceOrder();
+            Console.WriteLine("Placed order");
 
             //Capture the order number and write it to the results
             WaitForElementPresent(driver, By.CssSelector("li[class='woocommerce-order-overview__order order'] strong"));
             string OrderNumber = CheckoutPage.GetOrderNumber();
+            Console.WriteLine("Fetched order number. It is " + OrderNumber);
 
             //Naviagte to 'My Account> Orders' and check the same order shows
-            CheckoutPage.ClickMyAccountLink();
+            NavigationPage.GoMyAccount();
             MyAccountPage.ClickOrderLink();
             Assert.That(OrderNumber, Is.EqualTo(OrderPage.GetTopOrderNum()), "Order numbers do not match");
+            Console.WriteLine("Confirmed order numbers match");
+            TakeScreenshot(driver, "TC2A1");
 
             //Log out
-            OrderPage.ClickMyAccountLink();
+            NavigationPage.GoMyAccount();
             MyAccountPage.ClickLogout();
+            Console.WriteLine("Logout process completed");
 
             /*driver.FindElement(By.LinkText("Dismiss")).Click();//Dismisses the "demo store" warning which gets in the way
             //Login details for manually setup account
@@ -245,6 +269,12 @@ namespace MiniProject.Test_Cases
             driver.FindElement(By.CssSelector("li[id='menu-item-46'] a")).Click();
             driver.FindElement(By.CssSelector("li[class='woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--customer-logout'] a")).Click();
 */
+        }
+        public void TakeScreenshot(IWebDriver driver, string ssName)
+        {
+            ITakesScreenshot ssdriver = driver as ITakesScreenshot;
+            Screenshot screenshot = ssdriver.GetScreenshot();
+            screenshot.SaveAsFile(@"C:\Users\AlexTongue\OneDrive - nFocus Limited\Pictures\Test Screenshots\" + ssName);
         }
     }
 }

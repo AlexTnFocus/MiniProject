@@ -33,6 +33,22 @@ namespace MiniProject.POMs
         {
             Shop.Click();
         }
+        public void GoCart()
+        {
+            Cart.Click();
+        }
+        public void GoCheckout()
+        {
+            Checkout.Click();
+        }
+        public void GoMyAccount()
+        {
+            MyAccount.Click();
+        }
+        public void GoBlog()
+        {
+            Blog.Click();
+        }
 
     }
 }
