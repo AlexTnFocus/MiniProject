@@ -1,4 +1,7 @@
-﻿using OpenQA.Selenium;
+﻿//remove myaccountlink
+//
+
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +36,7 @@ namespace MiniProject.POMs
             CouponField.Clear();
             CouponField.SendKeys(couponCode);
         }
-        public void ClickCoupon()
+        public void ClickCouponButton()
         {
             CouponButton.Click();
         }
@@ -41,13 +44,14 @@ namespace MiniProject.POMs
         {
             MyAccountLink.Click();
         }
-        public string GetSubtotal()
+        public string GetSubtotal() //add element locator up top, remove £ here
         {
-            return driver.FindElement(By.CssSelector("tr[class='cart-subtotal'] bdi:nth-child(1)")).Text;
+            return driver.FindElement(By.CssSelector("tr[class='cart-subtotal'] bdi:nth-child(1)")).Text.Remove(0,1);
+            
         }
         public string GetDiscount()
         {
-            return driver.FindElement(By.CssSelector("td[data-title='Coupon: edgewords'] span[class='woocommerce-Price-amount amount']")).Text;
+            return driver.FindElement(By.CssSelector("td[data-title='Coupon: edgewords'] span[class='woocommerce-Price-amount amount']")).Text.Remove(0,1);
         }
         public string GetShipping()
         {

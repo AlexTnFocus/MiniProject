@@ -1,4 +1,8 @@
-﻿using System;
+﻿//Add more helper methods:
+//Taking screenshots
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

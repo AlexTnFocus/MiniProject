@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿//ShopPage Get rid of mouse move, generic method for adding to cart
+
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
@@ -18,21 +20,15 @@ namespace MiniProject.POMs
         }
 
         //Locators for elements on the 'Shop' Page
-        public IWebElement BeltButton => driver.FindElement(By.CssSelector("[href='?add-to-cart=28']"));
-        public IWebElement CartLink => driver.FindElement(By.CssSelector("a[title='View your shopping cart']"));
+
+
 
         //Procedures for the 'Shop' Page
-        public void AddBeltToCart()
+        public void AddItemToCart(string itemName)
         {
-            Actions actions = new Actions(driver);
-            actions.MoveToElement(BeltButton).Perform();
-            BeltButton.Click();
+            driver.FindElement(By.LinkText(itemName)).Click();
         }
 
-        public void ClickCartLink()
-        {
-            CartLink.Click();
-        }
 
     }
 }

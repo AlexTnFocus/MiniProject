@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿//use locator for GetTopOrderNum, not method
+
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;

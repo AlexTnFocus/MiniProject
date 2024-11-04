@@ -1,4 +1,8 @@
-﻿using OpenQA.Selenium;
+﻿//Make a completed order page POM
+//GetOrderNumber should be a locator
+//EnterFullBilling pass values not hard coded
+
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;

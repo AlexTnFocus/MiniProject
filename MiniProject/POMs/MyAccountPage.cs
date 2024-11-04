@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿//MyAccountPage shorten css selectors if possible, privatise locators
+
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,6 @@ namespace MiniProject.POMs
         }
 
         //Locators for elements on the 'My Account' Page
-        public IWebElement DismissButton => driver.FindElement(By.LinkText("Dismiss"));
         public IWebElement UsernameField => driver.FindElement(By.Id("username"));
         public IWebElement PasswordField => driver.FindElement(By.Id("password"));
         public IWebElement LoginButton => driver.FindElement(By.Name("login"));
@@ -27,10 +28,6 @@ namespace MiniProject.POMs
 
 
         //Procedures for the 'My Account' Page
-        public void DismissDemoWarning()
-        {
-            DismissButton.Click();
-        }
 
         public void KeyIntoUsername(string keyData)
         {
@@ -63,7 +60,7 @@ namespace MiniProject.POMs
 
         //Advanced functions for 'MyAccount' page
 
-        public void FullLogin(string username, string password)
+        public void CompleteLogin(string username, string password)
         {
             KeyIntoUsername(username);
             KeyIntoPassword(password);
